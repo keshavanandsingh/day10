@@ -1,4 +1,5 @@
-package addressBook;
+package addressBook; 
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -57,19 +58,19 @@ public static Map<String,AddressBook> hm= new HashMap<String, AddressBook>();
 			this.contact_list.add(contact);
 		
 		
-		if(AddressBookUC11.citytocontact.containsKey(contact.getCity())) {
-			AddressBookUC11.citytocontact.get(contact.getCity()).add(contact);
+		if(addressBookUC12.citytocontact.containsKey(contact.getCity())) {
+			addressBookUC12.citytocontact.get(contact.getCity()).add(contact);
 		}
 		else {
-			AddressBookUC11.citytocontact.put(contact.getCity(), new ArrayList<Contact>());
-			AddressBookUC11.citytocontact.get(contact.getCity()).add(contact);
+			addressBookUC12.citytocontact.put(contact.getCity(), new ArrayList<Contact>());
+			addressBookUC12.citytocontact.get(contact.getCity()).add(contact);
 		}
 		
-		if(AddressBookUC11.statetocontact.containsKey(contact.getState()))
-			AddressBookUC11.statetocontact.get(contact.getState()).add(contact);
+		if(addressBookUC12.statetocontact.containsKey(contact.getState()))
+			addressBookUC12.statetocontact.get(contact.getState()).add(contact);
 		else {
-			AddressBookUC11.statetocontact.put(contact.getState(), new ArrayList<Contact>());
-			AddressBookUC11.statetocontact.get(contact.getState()).add(contact);	
+			addressBookUC12.statetocontact.put(contact.getState(), new ArrayList<Contact>());
+			addressBookUC12.statetocontact.get(contact.getState()).add(contact);	
 		}
 		
 	}
@@ -133,9 +134,9 @@ public static Map<String,AddressBook> hm= new HashMap<String, AddressBook>();
 	public void deleteContact() {
 		int index=0;
 		int i,n;
-		Scanner s1=new Scanner(System.in);
+		Scanner s=new Scanner(System.in);
 		System.out.println("Enter name of contact to be deleted");
-		String first_name=s1.next();
+		String first_name=s.next();
 		n=contact_list.size();
 		
 		for(i=0;i<n;i++) {
@@ -160,5 +161,26 @@ public static Map<String,AddressBook> hm= new HashMap<String, AddressBook>();
          .sorted((c1, c2)->c1.getFirst_Name().compareTo(c2.getFirst_Name())) 
          .map(contact->contact.toString())
          .forEach(System.out::println); 
+	}
+	public static void getSortedContactListByCity(String AddressBookName){
+		hm.get(AddressBookName).contact_list
+		 .stream() 
+        .sorted((c1, c2)->c1.getCity().compareTo(c2.getCity())) 
+        .map(contact->contact.toString())
+        .forEach(System.out::println); 
+	}
+	public static void getSortedContactListByState(String AddressBookName){
+		hm.get(AddressBookName).contact_list
+		 .stream() 
+        .sorted((c1, c2)->c1.getState().compareTo(c2.getState())) 
+        .map(contact->contact.toString())
+        .forEach(System.out::println); 
+	}
+	public static void getSortedContactListByZip(String AddressBookName) {
+		hm.get(AddressBookName).contact_list
+		 .stream() 
+       .sorted((c1, c2)->((Integer)c1.getZip()).compareTo((Integer)c2.getZip())) 
+       .map(contact->contact.toString())
+       .forEach(System.out::println); 
 	}
 }
