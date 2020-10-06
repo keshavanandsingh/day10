@@ -6,6 +6,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.time.temporal.ChronoField;
 
+
 public class HotelReservation {
 	private final static Hotel LAKEWOOD = new Hotel("Lakewood", 110, 90, 80, 80, 3);
 	private final static Hotel BRIDGEWOOD = new Hotel("BridgeWood", 150, 50, 110, 50, 4);
@@ -19,7 +20,7 @@ public class HotelReservation {
 		}
 	};
 
-	public long regularDays(String start, String end) {
+	public long totalDays(String start, String end) {
 		Date startDate = null;
 		Date endDate = null;
 		SimpleDateFormat sdf = new SimpleDateFormat("ddMMMyyyy");
@@ -62,9 +63,32 @@ public class HotelReservation {
 		return hotel.getWeekdayRateRegular() * (days - weekendDays) + hotel.getWeekendRateRegular() * weekendDays;
 	}
 
-	public void cheapestHotel(String start, String end) throws ParseException {
+	public long rentCalculateReward(Hotel hotel, long days, long weekendDays) {
+
+		return hotel.getWeekdayRateReward() * (days - weekendDays) + hotel.getWeekendRateReward() * weekendDays;
+	}
+
+	public void cheapestHotelRegular(String start, String end) throws ParseException {
 		long days, minRent;
-		days = regularDays(start, end);
+		days = totalDays(start, end);
+		long weekendDays = weekendDays(start, end);
+
+		List<Long> rentList = hotelList.stream().map(hotel -> rentCalculateRegular(hotel, days, weekendDays))
+				.collect(Collectors.toList());
+		minRent = Collections.min(rentList);
+		List<Hotel> cheapestHotels = hotelList.stream()
+				.filter(hotel -> rentCalculateRegular(hotel, days, weekendDays) == minRent)
+				.collect(Collectors.toList());
+
+		System.out.print("Cheapest Hotel(s): ");
+		for (Hotel hotel : cheapestHotels)
+			System.out.print(hotel.getName() + " ");
+		System.out.println(", Total Cost: $" + minRent);
+	}
+
+	public void cheapestBestRatedHotelRegular(String start, String end) throws ParseException {
+		long days, minRent;
+		days = totalDays(start, end);
 		long weekendDays = weekendDays(start, end);
 
 		List<Long> rentList = hotelList.stream().map(hotel -> rentCalculateRegular(hotel, days, weekendDays))
@@ -74,16 +98,33 @@ public class HotelReservation {
 				.filter(hotel -> rentCalculateRegular(hotel, days, weekendDays) == minRent)
 				.collect(Collectors.toList());
 		Hotel cheapestHotel = cheapestHotels.stream().max(Comparator.comparing(Hotel::getRatings)).orElse(null);
-		System.out.print("Cheapest Hotel(s): ");
+		System.out.print("Regular Customer => Cheapest Hotel(s): ");
 		System.out.print(cheapestHotel.getName() + ", Rating: " + cheapestHotel.getRatings());
-		System.out.println(", Total Cost: $" + minRent);
+		System.out.println(" and Total Cost: $" + minRent);
 	}
 
-	public void bestRatedHotel(String start, String end) throws ParseException {
+	public void bestRatedHotelRegular(String start, String end) throws ParseException {
 		Hotel bestRatedHotel = hotelList.stream().max(Comparator.comparing(Hotel::getRatings)).orElse(null);
 
-		System.out.println("Best Rated Hotel: " + bestRatedHotel.getName() + ", Total Cost: $"
-				+ rentCalculateRegular(bestRatedHotel, regularDays(start, end), weekendDays(start, end)));
+		System.out.println("Best Rated Hotel for Regular Customer: " + bestRatedHotel.getName() + "; Total Cost: $"
+				+ rentCalculateRegular(bestRatedHotel, totalDays(start, end), weekendDays(start, end)));
+	}
+
+	public void cheapestBestRatedHotelReward(String start, String end) throws ParseException {
+		long days, minRent;
+		days = totalDays(start, end);
+		long weekendDays = weekendDays(start, end);
+
+		List<Long> rentList = hotelList.stream().map(hotel -> rentCalculateReward(hotel, days, weekendDays))
+				.collect(Collectors.toList());
+		minRent = Collections.min(rentList);
+		List<Hotel> cheapestHotels = hotelList.stream()
+				.filter(hotel -> rentCalculateReward(hotel, days, weekendDays) == minRent)
+				.collect(Collectors.toList());
+		Hotel cheapestHotel = cheapestHotels.stream().max(Comparator.comparing(Hotel::getRatings)).orElse(null);
+		System.out.print("Reward Customer => Cheapest Hotel(s): ");
+		System.out.print(cheapestHotel.getName() + ", Rating: " + cheapestHotel.getRatings());
+		System.out.println(" and Total Cost: $" + minRent);
 	}
 
 	public static void main(String[] args) throws ParseException {
@@ -93,8 +134,7 @@ public class HotelReservation {
 		String endDate = "12Sep2020";
 
 		HotelReservation hotelReservation = new HotelReservation();
-		hotelReservation.cheapestHotel(startDate, endDate);
-		hotelReservation.bestRatedHotel(startDate, endDate);
+		hotelReservation.cheapestBestRatedHotelReward(startDate, endDate);
 
 	}
 }
