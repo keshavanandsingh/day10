@@ -1,17 +1,19 @@
 package com.hotelReservation;
 
+
+
 public class Hotel {
 	private String name;
-	private int regularRate;
-	private int weekendRate;
+	private int regularRate, weekendRate, ratings;
 
 	public Hotel() {
 	}
 
-	public Hotel(String name, int regularRates, int weekedRate) {
+	public Hotel(String name, int regularRates, int weekedRate, int ratings) {
 		this.name = name;
 		this.regularRate = regularRates;
 		this.weekendRate = weekedRate;
+		this.ratings = ratings;
 	}
 
 	public String getName() {
@@ -36,5 +38,13 @@ public class Hotel {
 
 	public void setWeekendRates(int regularRates) {
 		this.weekendRate = regularRates;
+	}
+
+	public int getRatings() {
+		return ratings;
+	}
+
+	public void setRatings(int ratings) {
+		this.ratings = ratings;
 	}
 }
