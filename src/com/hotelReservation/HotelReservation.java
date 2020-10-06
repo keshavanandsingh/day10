@@ -1,12 +1,9 @@
 package com.hotelReservation;
-
 import java.text.*;
 import java.time.*;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.time.temporal.ChronoField;
-
-
 public class HotelReservation {
 	private final static Hotel LAKEWOOD = new Hotel("Lakewood", 110, 90, 80, 80, 3);
 	private final static Hotel BRIDGEWOOD = new Hotel("BridgeWood", 150, 50, 110, 50, 4);
@@ -134,6 +131,7 @@ public class HotelReservation {
 		String endDate = "12Sep2020";
 
 		HotelReservation hotelReservation = new HotelReservation();
+		// Already done using java stream
 		hotelReservation.cheapestBestRatedHotelReward(startDate, endDate);
 
 	}
